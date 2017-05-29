@@ -1,12 +1,26 @@
 <!-- <!DOCTYPE html> -->
-<html>
+<html ng-app = "chirps">
 <head>
 	<title>Chirp</title>
 	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="style.css">
+	<script type="text/javascript" src="angular.min.js"></script>
 
+	<script type="text/javascript">
+		
+		var app = angular.module('chirps', []);
+
+		app.controller('ChirpCtrl',function($scope) {
+			$scope.chirps = [
+			'Hi I am a new chirp! ', 'Wola!!! Wassup guys', 'I just got a new brother', 'Woho! Congratulations chirp'
+		];
+
+		});
+		
+	</script>
+	
 </head>
-<body>
+<body ng-controller = "ChirpCtrl">
 	<h1 class="page-title">Chirp</h1>
 	<div class = "row feed">
 		<div class = "col-md-4">
@@ -17,26 +31,11 @@
 			<input type="password" size="30" placeholder="Password">
 		</div>
 		<div class = "col-md-8">
-			<h3>
+			<h3 ng-repeat = "chirp in chirps">
 				<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-				rightside
+				{{chirp}}
 			</h3>
-			<h3>
-				<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-				rightside
-			</h3>			
-			<h3>
-				<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-				rightside
-			</h3>			
-			<h3>
-				<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-				rightside
-			</h3>			
-			<h3>
-				<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-				rightside
-			</h3>
+
 		</div>
 	</div>
 </body>
