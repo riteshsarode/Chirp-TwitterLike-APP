@@ -12,3 +12,10 @@
 
 .page-title{
 	margin-left: 100px;
+}
+
+.new-chirp{
+	border: 1px solid #333;
+	padding: 20px;
+	width: 100%;
+}
