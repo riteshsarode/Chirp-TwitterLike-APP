@@ -1,5 +1,6 @@
 var express = require('express');
 var MongoClient = require('mongodb').MongoClient;  
+var ObjectId = require('mongodb').ObjectId;  
 var bodyParser = require('body-parser');
 var app = express()   //server side app
 
@@ -42,6 +43,17 @@ app.post('/chirps', function(req,res,next) {
 		});
 	});
 
+})
+
+
+// Removes Chirps 
+app.put('/chirps/remove', function(req,res,next) {
+
+	db.collection('allchirps', function(err,chirpsCollection){
+		chirpsCollection.remove( {_id: ObjectId(req.body.chirp._id)} ,{w:1},function(err,chirps){
+		return res.send();
+		});
+	});
 })
 
 // Listen on port 3000 and after starting execute the function(second argument)

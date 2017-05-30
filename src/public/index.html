@@ -12,18 +12,29 @@
 
 		app.controller('ChirpCtrl',function($scope, $http) {
 			
-
+			// to Post data on the backend
 			$scope.submitNewChirp = function(){
 				$http.post('/chirps',{newChirp: $scope.newChirp}).then(function(){
-					alert('success!');
+					getChirps();	// Calling getChirps to display the updated database on the webpage	 
+					$scope.newChirp = '';
 				});
 			};
 
-			// get the data from our server using APIs
-			$http.get('/chirps').then(function(response){
-				$scope.chirps = response.data;
-			});
-
+			//Call get again to update the page after posting new chirps to backend/database
+			function getChirps(){
+				// get the data from our server using APIs
+				$http.get('/chirps').then(function(response){
+					$scope.chirps = response.data;
+				});
+			}
+			//Calls the getChirps function when page loads
+			getChirps();
+			
+			$scope.removeChirp = function(delChirp){
+				$http.put('/chirps/remove',{chirp: delChirp}).then(function(){
+					getChirps();	// Calling getChirps to display the updated database on the webpage	 
+				});
+			};
 		});
 		
 	</script>
@@ -50,6 +61,7 @@
 			<h3 ng-repeat = "chirp in chirps">
 				<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 				{{chirp.text}}
+				<a href ng-click="removeChirp(chirp)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
 			</h3>
 
 		</div>
