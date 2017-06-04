@@ -58,6 +58,19 @@
 				});
 			}
 
+			//to signin
+			$scope.signIn = function(){
+				$http.put('/users/signin', {username:$scope.username, password:$scope.password})
+				.then(function(){
+
+					// login to the user account
+					alert('signedIn');
+
+				}, function(err){
+					alert('Could Not SignIn! Wrong Credentials');
+				});
+			}
+
 			//Calls the getChirps function when page loads
 			getChirps();
 
@@ -83,7 +96,7 @@
 	
 </head>
 <body ng-app = "chirps">
-	<h1 class="page-title">Chirp</h1>
+	<h1 class="page-title"><a href = "#/">Chirp</a></h1>
 	<div ng-view></div>
 
  </body>

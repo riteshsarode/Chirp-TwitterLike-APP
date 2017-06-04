@@ -2,7 +2,11 @@ var express = require('express');
 var MongoClient = require('mongodb').MongoClient;  
 var ObjectId = require('mongodb').ObjectId;  
 var bodyParser = require('body-parser');
+var bcrypt = require('bcryptjs');
+
 var app = express()   //server side app
+
+
 
 //Host the website on this server on port 3000 | Serve the front end front he folder public
 app.use(express.static('public'));
@@ -33,9 +37,6 @@ app.get('/chirps', function(req,res,next) {
 //handles the post request from the front end  
 app.post('/chirps', function(req,res,next) {
 
-	// console.log(req.body.newChirp);
-	// chirps.push(req.body.newChirp);
-
 	db.collection('allchirps', function(err,chirpsCollection){
 		chirpsCollection.insert( {text: req.body.newChirp},{w:1},function(err,chirps){
 		
@@ -60,12 +61,42 @@ app.put('/chirps/remove', function(req,res,next) {
 app.post('/users', function(req,res,next) {
 
 	db.collection('users', function(err,usersCollection){
-		usersCollection.insert( req.body,{w:1},function(err){
 		
-		return res.send();
+		bcrypt.genSalt(10, function(err, salt) {
+		    bcrypt.hash(req.body.password, salt, function(err, hash) {
+				var newUser = {
+						username: req.body.username,
+						password: hash
+				};
+				console.log(newUser);
+				usersCollection.insert( newUser,{w:1},function(err){
+
+				return res.send();		   
+				});					
+			});	
 		});
 	});
+})
 
+//Login check to login to the account
+app.put('/users/signin', function(req,res,next) {
+
+	db.collection('users', function(err,usersCollection){
+		
+
+	usersCollection.findOne({username:req.body.username}, function(err,user){
+		
+		// comapre the username nand password with the one int eh database
+		bcrypt.compare(req.body.password, user.password, function(err, result){
+			if (result) {
+				res.send();
+			}else{
+				return res.status(400).send();
+			}
+		});
+		
+		});
+	});
 })
 
 

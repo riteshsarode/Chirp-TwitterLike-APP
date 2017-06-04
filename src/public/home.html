@@ -2,10 +2,14 @@
 	<div class = "col-md-4">
 		<h4>Login:</h4>
 		<br>
-		<input type="text" size="30" placeholder="Username">
+		<input type="text" size="30" placeholder="Username" ng-model = "username">
 		<br><br>
-		<input type="password" size="30" placeholder="Password">
-		
+		<input type="password" size="30" placeholder="Password" ng-model="password">
+			
+		<br><br>
+		<button type="button" ng-click="signIn()">Sign In</button>
+
+
 		<!-- //Signup -->
 		<br><br>
 		<a href="#/signup">Not a Member? Sign Up</a>
