@@ -5,11 +5,12 @@
 	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<script type="text/javascript" src="https://code.angularjs.org/1.4.9/angular.min.js"></script>
-	<script type="text/javascript" src="https://code.angularjs.org/1.4.9/angular-route.js"></script>
+	<script type="text/javascript" src="https://code.angularjs.org/1.4.9/angular-route.min.js"></script>
+<script type="text/javascript" src="https://code.angularjs.org/1.4.9/angular-cookies.min.js"></script>
 
 	<script type="text/javascript">
 		
-		var app = angular.module('chirps', ['ngRoute']);
+		var app = angular.module('chirps', ['ngRoute', 'ngCookies']);
 
 		app.config(function($routeProvider, $locationProvider) {
 			$routeProvider
@@ -30,10 +31,18 @@
 
 		});
 
+		//The appliation runs this thing while starting it every time. So declare global things here
+		app.run(function($rootScope, $cookies){
+			if ($cookies.get('token') && $cookies.get('currentUser')) {
+				$rootScope.token = $cookies.get('token');
+				$rootScope.currentUser = $cookies.get('currentUser')
+
+			}
+		});
 
 
 
-		app.controller('HomeController',function($scope, $http) {
+		app.controller('HomeController',function($rootScope, $scope, $http, $cookies) {
 			
 			// to Post data on the backend
 			$scope.submitNewChirp = function(){
@@ -61,8 +70,12 @@
 			//to signin
 			$scope.signIn = function(){
 				$http.put('/users/signin', {username:$scope.username, password:$scope.password})
-				.then(function(){
+				.then(function(res){
+					$cookies.put('token',res.data.token);
+					$cookies.put('currentUser',$scope.username);
 
+					$rootScope.token = res.data.token;
+					$rootScope.currentUser = $scope.username;
 					// login to the user account
 					alert('signedIn');
 

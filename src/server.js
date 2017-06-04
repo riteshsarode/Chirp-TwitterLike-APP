@@ -3,9 +3,10 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;  
 var bodyParser = require('body-parser');
 var bcrypt = require('bcryptjs');
-
+var jwt = require('jwt-simple');
 var app = express()   //server side app
 
+var JWT_SECRET = 'chirpbirds';
 
 
 //Host the website on this server on port 3000 | Serve the front end front he folder public
@@ -89,7 +90,8 @@ app.put('/users/signin', function(req,res,next) {
 		// comapre the username nand password with the one int eh database
 		bcrypt.compare(req.body.password, user.password, function(err, result){
 			if (result) {
-				res.send();
+				var myToken = jwt.encode(user,JWT_SECRET);
+				res.json({token:myToken});
 			}else{
 				return res.status(400).send();
 			}
