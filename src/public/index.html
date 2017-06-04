@@ -4,13 +4,36 @@
 	<title>Chirp</title>
 	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="style.css">
-	<script type="text/javascript" src="angular.min.js"></script>
+	<script type="text/javascript" src="https://code.angularjs.org/1.4.9/angular.min.js"></script>
+	<script type="text/javascript" src="https://code.angularjs.org/1.4.9/angular-route.js"></script>
 
 	<script type="text/javascript">
 		
-		var app = angular.module('chirps', []);
+		var app = angular.module('chirps', ['ngRoute']);
 
-		app.controller('ChirpCtrl',function($scope, $http) {
+		app.config(function($routeProvider, $locationProvider) {
+			$routeProvider
+			
+			//Route for home page
+			.when('/', {
+				templateUrl: 'home.html',
+				controller: 'HomeController',
+			})
+
+			//Route for signup page
+			.when('/signup', {
+				templateUrl: 'signup.html',
+				controller: 'SignupController',
+			});
+
+			// $locationProvider.html5Mode(true);
+
+		});
+
+
+
+
+		app.controller('HomeController',function($scope, $http) {
 			
 			// to Post data on the backend
 			$scope.submitNewChirp = function(){
@@ -18,7 +41,7 @@
 					getChirps();	// Calling getChirps to display the updated database on the webpage	 
 					$scope.newChirp = '';
 				});
-			};
+			}
 
 			//Call get again to update the page after posting new chirps to backend/database
 			function getChirps(){
@@ -27,44 +50,41 @@
 					$scope.chirps = response.data;
 				});
 			}
-			//Calls the getChirps function when page loads
-			getChirps();
+			
 			
 			$scope.removeChirp = function(delChirp){
 				$http.put('/chirps/remove',{chirp: delChirp}).then(function(){
 					getChirps();	// Calling getChirps to display the updated database on the webpage	 
 				});
-			};
+			}
+
+			//Calls the getChirps function when page loads
+			getChirps();
+
+		});			
+
+
+		app.controller('SignupController',function($scope, $http) {
+			$scope.submitSignup = function(){
+				var newUser={
+					username: $scope.username,
+					password: $scope.password
+				};
+
+				$http.post('/users',newUser).then(function(){
+					alert('success!');
+				});
+			} 
+
 		});
-		
+
+
 	</script>
 	
 </head>
-<body ng-controller = "ChirpCtrl">
+<body ng-app = "chirps">
 	<h1 class="page-title">Chirp</h1>
-	<div class = "row feed">
-		<div class = "col-md-4">
-			<h4>Login:</h4>
-			<br>
-			<input type="text" size="30" placeholder="Username">
-			<br><br>
-			<input type="password" size="30" placeholder="Password">
-		</div>
-		<div class = "col-md-8">
-			<div class="new-chirp">
-				<input type="text" class="form-control" ng-model="newChirp" placeholder="What's your Chirp today?">
-				<br>
-				<button type="button" ng-click='submitNewChirp()' class="btn">
-					Chirp
-				</button>
-			</div>
-			<h3 ng-repeat = "chirp in chirps">
-				<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-				{{chirp.text}}
-				<a href ng-click="removeChirp(chirp)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-			</h3>
+	<div ng-view></div>
 
-		</div>
-	</div>
-</body>
+ </body>
 </html>

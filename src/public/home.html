@@ -1,0 +1,30 @@
+<div class = "row feed">
+	<div class = "col-md-4">
+		<h4>Login:</h4>
+		<br>
+		<input type="text" size="30" placeholder="Username">
+		<br><br>
+		<input type="password" size="30" placeholder="Password">
+		
+		<!-- //Signup -->
+		<br><br>
+		<a href="#/signup">Not a Member? Sign Up</a>
+
+
+	</div>
+	<div class = "col-md-8">
+		<div class="new-chirp">
+			<input type="text" class="form-control" ng-model="newChirp" placeholder="What's your Chirp today?">
+			<br>
+			<button type="button" ng-click='submitNewChirp()' class="btn">
+				Chirp
+			</button>
+		</div>
+		<h3 ng-repeat = "chirp in chirps">
+			<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+			{{chirp.text}}
+			<a href ng-click="removeChirp(chirp)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+		</h3>
+
+	</div>
+</div>

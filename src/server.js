@@ -45,8 +45,7 @@ app.post('/chirps', function(req,res,next) {
 
 })
 
-
-// Removes Chirps 
+// Removes Chirp messages from the database
 app.put('/chirps/remove', function(req,res,next) {
 
 	db.collection('allchirps', function(err,chirpsCollection){
@@ -56,7 +55,26 @@ app.put('/chirps/remove', function(req,res,next) {
 	});
 })
 
+//Making a route to the users collection in the daatabse for this application
+//handles the post requests to post passowrds  while signups
+app.post('/users', function(req,res,next) {
+
+	db.collection('users', function(err,usersCollection){
+		usersCollection.insert( req.body,{w:1},function(err){
+		
+		return res.send();
+		});
+	});
+
+})
+
+
+
 // Listen on port 3000 and after starting execute the function(second argument)
 app.listen(3000, function () {
   console.log('App listening on port 3000!')
 })
+
+
+
+
