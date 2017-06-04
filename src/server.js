@@ -38,8 +38,18 @@ app.get('/chirps', function(req,res,next) {
 //handles the post request from the front end  
 app.post('/chirps', function(req,res,next) {
 
+	//for individual user persalization
+	var token = req.headers.authorization;
+	var user = jwt.decode(token,JWT_SECRET);
+
+	var newChirp ={
+		text:req.body.newChirp,
+		user:user._id,
+		username: user.username
+	};
+
 	db.collection('allchirps', function(err,chirpsCollection){
-		chirpsCollection.insert( {text: req.body.newChirp},{w:1},function(err,chirps){
+		chirpsCollection.insert( newChirp,{w:1},function(err,chirps){
 		
 		return res.send();
 		});
@@ -50,8 +60,13 @@ app.post('/chirps', function(req,res,next) {
 // Removes Chirp messages from the database
 app.put('/chirps/remove', function(req,res,next) {
 
+	//decoding hte username and user_id for deletion
+	var token = req.headers.authorization;
+	var user = jwt.decode(token,JWT_SECRET);
+
+	// deletes only when the username matched the object id i.e the post is done by a particular user
 	db.collection('allchirps', function(err,chirpsCollection){
-		chirpsCollection.remove( {_id: ObjectId(req.body.chirp._id)} ,{w:1},function(err,chirps){
+		chirpsCollection.remove( {_id: ObjectId(req.body.chirp._id), user:(user._id)} ,{w:1},function(err,chirps){
 		return res.send();
 		});
 	});

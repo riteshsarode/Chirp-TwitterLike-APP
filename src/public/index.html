@@ -46,7 +46,14 @@
 			
 			// to Post data on the backend
 			$scope.submitNewChirp = function(){
-				$http.post('/chirps',{newChirp: $scope.newChirp}).then(function(){
+				$http.post('/chirps', 
+					{newChirp: $scope.newChirp}, 
+					
+					{headers:{
+						'authorization':$rootScope.token
+					}}).then(function(){
+					
+
 					getChirps();	// Calling getChirps to display the updated database on the webpage	 
 					$scope.newChirp = '';
 				});
@@ -62,7 +69,11 @@
 			
 			
 			$scope.removeChirp = function(delChirp){
-				$http.put('/chirps/remove',{chirp: delChirp}).then(function(){
+				$http.put('/chirps/remove',
+					{chirp: delChirp},
+					{headers:{
+						'authorization':$rootScope.token
+					}}).then(function(){
 					getChirps();	// Calling getChirps to display the updated database on the webpage	 
 				});
 			}
@@ -77,12 +88,19 @@
 					$rootScope.token = res.data.token;
 					$rootScope.currentUser = $scope.username;
 					// login to the user account
-					alert('signedIn');
 
 				}, function(err){
 					alert('Could Not SignIn! Wrong Credentials');
 				});
-			}
+			};
+
+			$scope.logout = function(){
+				$cookies.remove('token');
+				$cookies.remove('currentUser');
+
+				$rootScope.token = null;
+				$rootScope.currentUser = null;
+			};
 
 			//Calls the getChirps function when page loads
 			getChirps();
